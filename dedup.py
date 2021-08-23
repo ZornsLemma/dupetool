@@ -1,3 +1,6 @@
+# TODO: We *don't* (contrary to my initial thoughts) need to worry about hardlinks - if we delete one of two hardlinks to the same file, we still have the data. What we might need to worry about are symlinks - can we check for this in confirm_identical()? Should we do something when building the database to ignore symlinks? (Ignore completely? Ignore symlinks to files but allow symlinks to directories?)
+
+
 from __future__ import print_function
 import collections
 import os
@@ -12,7 +15,16 @@ def die(s):
 
 
 def confirm_identical(a, b):
-    return True # SFTODO! CHECK CONTENTS, PROBABLY ALSO COMPARE INODES
+    BUF_SIZE = 4096
+    with open(a, "rb") as af:
+        with open(b, "rb") as bf:
+            while True:
+                ad = af.read(BUF_SIZE)
+                bd = bf.read(BUF_SIZE)
+                if len(ad) == 0 and len(bd) == 0:
+                    return True
+                if ad != bd:
+                    return False
 
 
 with open("foo.pickle", "rb") as f:
