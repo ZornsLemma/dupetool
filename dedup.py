@@ -64,6 +64,8 @@ for candidate_filename in candidate_filenames:
                 # TODO: Issue a warning?
                 break
             elif file_content_identical(candidate_filename, other_filename):
+                #print("md5sum %s %s;echo" % (candidate_filename, other_filename))
+                #print("mv %s /var/tmp/dups" % (candidate_filename))
                 print("Could remove '%s'; '%s' is identical" % (candidate_filename, other_filename))
                 break
             else:
